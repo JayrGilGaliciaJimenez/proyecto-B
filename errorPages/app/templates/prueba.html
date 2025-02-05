@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <!--Como mostrtar informacion que viene desde python (back) -->
+        {% if objeto %}
+        <!-- To do lo que este aqui se va a pintar -->
+        <h1>{{ objeto.id }} - {{ objeto.titulo }} </h1>
+        <p>{{ objeto.descripcion }}</p>
+        {% endif %}
+
+        {% if arreglo %}
+        <ul>
+            {% for objeto in arreglo %}
+            <li>{{ objeto.id }} - {{ objeto.titulo }} </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <!-- Como enviar informacion del front al back -->
+        <form>
+            <input type="text" name="texto" placeholder="Ingrese texto">
+            <button type="submit">Enviar</button>
+        </form>
+
+
+        {% if lista %}
+
+        <ul>
+            {% for persona in lista %}
+            <li>{{ persona.nombres }} {{persona.apellidos}} {{persona.edad}}</li>
+            {% endfor %}
+        </ul>
+
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>

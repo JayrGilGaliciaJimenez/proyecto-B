@@ -1,31 +1,16 @@
-from django.shortcuts import render, redirect
+from rest_framework.renderers import JSONRenderer
+from rest_framework import viewsets
 from .models import Producto
-from django.http import JsonResponse
+from .serializers import ProductoSerializer
 
-from .forms import productoForm
+class ProductoViewSet(viewsets.ModelViewSet):
+    # esta variable nos dice de donde saca los datos para el modelo
+    queryset = Producto.objects.all()
+    # serializar la informacion
+    serializer_class = ProductoSerializer
+    # renderizar la informacion
+    renderer_classes = [JSONRenderer]
 
-
-def lista_productos(request):
-    productos = Producto.objects.all()
-
-    data = [
-        {"nombre": p.nombre, "precio": p.precio, "imagen": p.imagen} for p in productos
-    ]
-
-    return JsonResponse(data, safe=False)
-
-
-def ver_productos(request):
-    return render(request, "ver.html")
-
-
-def agregar_producto(request):
-
-    if request.method == "POST":
-        form = productoForm(request.POST)
-        if form.is_valid:
-            form.save()
-            return redirect("ver")
-    else:
-        form = productoForm()
-    return render(request, "agregar.html", {"form": form})
+    # Filtrar los metdos http que se pueden usar
+    # si no se especifica se pueden usar todos
+    # http_method_names = ['get', 'post', 'put']

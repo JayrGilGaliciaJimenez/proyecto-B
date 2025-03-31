@@ -1,5 +1,8 @@
+from django.shortcuts import render
 from rest_framework.renderers import JSONRenderer
 from rest_framework import viewsets
+
+from .forms import productoForm
 from .models import Producto
 from .serializers import ProductoSerializer
 
@@ -14,3 +17,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
     # Filtrar los metdos http que se pueden usar
     # si no se especifica se pueden usar todos
     # http_method_names = ['get', 'post', 'put']
+
+def agregar_producto(request):
+    form = productoForm()
+    return render(request, "agregar.html", {"form": form})

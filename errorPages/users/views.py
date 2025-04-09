@@ -11,6 +11,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import logging
+from django.shortcuts import get_object_or_404
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,7 @@ class UserViewSets(viewsets.ModelViewSet):
 # hacer una vista que devulva el token
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
 
 class CustomUserFormAPI(APIView):
 
@@ -68,3 +70,25 @@ class CustomUserFormAPI(APIView):
         logger.error("Form errors: %s", form.errors)
 
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, id, *args, **kwargs):
+        logger.debug("Received data for update: %s", request.data)
+        User = get_user_model()
+        user = get_object_or_404(User, id=id)
+
+        # Merge existing user data with incoming data
+        updated_data = {**{field.name: getattr(user, field.name) for field in user._meta.fields}, **request.data}
+
+        form = CustomUserCreationForm(updated_data, instance=user)
+        if form.is_valid():
+            form.save()
+            return Response({'message': 'Usuario actualizado con éxito'}, status=status.HTTP_200_OK)
+        logger.error("Form errors: %s", form.errors)
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, *args, **kwargs):
+        logger.debug("Received request to delete user with id: %s", id)
+        User = get_user_model()
+        user = get_object_or_404(User, id=id)
+        user.delete()
+        return Response({'message': 'Usuario eliminado con éxito'}, status=status.HTTP_204_NO_CONTENT)

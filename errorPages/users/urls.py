@@ -11,4 +11,5 @@ urlpatterns = [
     path('token/', CustomTokenObtainPairView.as_view(), name='token'),
     path('token/refresh/', TokenRefreshView.as_view(), name='refresh'),
     path('form/', CustomUserFormAPI.as_view(), name='form'),
+    path('form/<int:id>/', CustomUserFormAPI.as_view(), name='form'),
 ]
